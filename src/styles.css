@@ -14,7 +14,7 @@ body {
   top: 200px;
   width: 115px;
   height: 115px;
-  background-color: red;
+  background-image: url('/assets/plate.png');
 }
 
 .tray {
@@ -51,7 +51,7 @@ body {
 .ingredient__rice {
   left: 20px;
   top: 200px;
-  background-color: wheat;
+  background-image: url('/assets/rice.png');
 }
 
 .ingredient__salmon {
