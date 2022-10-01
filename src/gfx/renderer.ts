@@ -1,23 +1,31 @@
+import { IngredientType } from "../features/plate/plate.model";
 import { DragDropService } from "../utils/dragdrop";
 import { EventService } from "../utils/events";
 import { CustomerQueueView } from "./customer-queue/customer-queue.view";
+import { IngredientView } from "./ingredients/ingredient.view";
 import { PlateView } from "./plate.view";
 
+export interface View {
+  update(dt: number): void;
+  destroy(): void;
+}
+
 export class Renderer {
-  private customerQueueView: CustomerQueueView;
-  private plateView: PlateView;
+  views: View[] = [];
 
   constructor(container: HTMLElement, eventService: EventService, dragDropService: DragDropService) {
-    this.customerQueueView = new CustomerQueueView(container, eventService, dragDropService);
-    this.plateView = new PlateView(container, dragDropService);
+    this.views.push(new CustomerQueueView(container, eventService, dragDropService));
+    this.views.push(new PlateView(container, dragDropService));
+    this.views.push(new IngredientView(container, IngredientType.Rice, dragDropService));
+    this.views.push(new IngredientView(container, IngredientType.Salmon, dragDropService));
   }
 
   public update(dt: number) {
-    this.customerQueueView.update(dt);
+    this.views.forEach(v => v.update(dt));
   }
 
   public destroy() {
-    this.customerQueueView.destroy();
-    this.plateView.destroy();
+    this.views.forEach(v => v.destroy());
+    this.views = [];
   }
 }

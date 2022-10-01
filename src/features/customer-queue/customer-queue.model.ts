@@ -32,7 +32,8 @@ export class CustomerQueueModel {
         this.fired.next();
       }
     }));
-    this.sub.add(eventService.addEventListener<any>(GameTopic.TrayFilled, ({id}) => {
+    this.sub.add(eventService.addEventListener<any>(GameTopic.TrayFilled, ({id, ingredients}) => {
+      console.log('filled with', ingredients);
       this.waitingCustomers = this.waitingCustomers.filter(v => v !== id);
     }));
   }

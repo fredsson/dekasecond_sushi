@@ -1,7 +1,10 @@
-import { fromEvent, Observable, Subject } from "rxjs";
+import { defer, fromEvent, merge, Observable, Subject } from "rxjs";
+import { IngredientType } from "../features/plate/plate.model";
+import { isValueDefined } from "./sanity";
 
 export enum Draggable {
   Plate,
+  Ingredient
 }
 
 export enum DropTarget {
@@ -11,34 +14,48 @@ export enum DropTarget {
 export interface DropEvent {
   clientX: number;
   clientY: number;
+  ingredientType?: IngredientType;
+  ingredients?: IngredientType[];
 }
 
+export interface DraggableItem {
+  type: Draggable;
+  ingredientType?: IngredientType;
+}
+
+export function eventIsTouchEvent(ev: MouseEvent | TouchEvent): ev is TouchEvent {
+  const touches = (ev as TouchEvent).changedTouches;
+  return  isValueDefined(touches);
+}
 
 export class DragDropService {
 
-  private dragStarted = new Subject<Draggable>();
-  public dragStarted$: Observable<Draggable> = this.dragStarted.asObservable();
+  private dragStarted = new Subject<DraggableItem>();
+  public dragStarted$ = this.dragStarted.asObservable();
 
 
   private dropped = new Subject<DropEvent>();
   public dropped$ = this.dropped.asObservable();
 
-  public drag() {
-    this.dragStarted.next(Draggable.Plate);
+  public startEvents(element: HTMLElement): Observable<MouseEvent | TouchEvent> {
+    return defer(() => merge(
+      fromEvent<MouseEvent>(element, 'mousedown'),
+      fromEvent<TouchEvent>(element, 'touchstart'),
+    ))
   }
 
-  public drop(ev: MouseEvent) {
-    this.dropped.next({ clientX: ev.clientX, clientY: ev.clientY});
+  public endEvents(element: HTMLElement): Observable<MouseEvent | TouchEvent> {
+    return defer(() => merge(
+      fromEvent<MouseEvent>(element, 'mouseup'),
+      fromEvent<TouchEvent>(element, 'touchend'),
+    ))
   }
 
-  public registerDropTarget() {
+  public drag(item: DraggableItem) {
+    this.dragStarted.next(item);
   }
 
-  public fromWindowEvent<T>(eventName: string): Observable<T> {
-    return fromEvent<T>(window, eventName);
-  }
-
-  public fromEvent<T>(element: HTMLElement, eventName: string): Observable<T> {
-    return fromEvent<T>(element, eventName);
+  public drop(ev: DropEvent) {
+    this.dropped.next(ev);
   }
 }

@@ -1,4 +1,5 @@
 import { Subject, Subscription } from "rxjs";
+import { IngredientType } from "../../features/plate/plate.model";
 import { DragDropService, Draggable } from "../../utils/dragdrop";
 
 export class TrayView {
@@ -9,7 +10,7 @@ export class TrayView {
   private reachedCustomer = new Subject<void>();
   public reachedCustomer$ = this.reachedCustomer.asObservable();
 
-  private filled = new Subject<void>();
+  private filled = new Subject<IngredientType[]>();
   public filled$ = this.filled.asObservable();
 
   private sub = new Subscription();
@@ -25,13 +26,14 @@ export class TrayView {
     this.root.style.left = `${this.x}px`;
 
     this.sub.add(dragDropService.dragStarted$.subscribe(draggable => {
-      if (draggable === Draggable.Plate) {
+      if (draggable.type === Draggable.Plate) {
         this.draggableSub = dragDropService.dropped$.subscribe(ev => {
+          console.log(ev);
           const blah = this.root.getBoundingClientRect();
           const insideX = ev.clientX >= blah.left && ev.clientX <= blah.left + blah.width;
           const insideY = ev.clientY >= blah.top && ev.clientY <= blah.top + blah.height;
           if (insideX && insideY) {
-            this.filled.next();
+            this.filled.next(ev.ingredients ?? []);
             this.root.classList.add('tray--filled');
           }
         });

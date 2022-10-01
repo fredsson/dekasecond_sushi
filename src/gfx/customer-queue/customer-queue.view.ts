@@ -2,9 +2,10 @@ import { Subscription } from "rxjs";
 import { TrayAddedEvent } from "../../features/customer-queue/customer-queue.model";
 import { DragDropService } from "../../utils/dragdrop";
 import { EventService, GameTopic } from "../../utils/events";
+import { View } from "../renderer";
 import { ConveyorView } from "./conveyor.view";
 
-export class CustomerQueueView {
+export class CustomerQueueView implements View {
   private conveyorView: ConveyorView;
   private sub = new Subscription();
 
@@ -15,8 +16,8 @@ export class CustomerQueueView {
       eventService.emit(GameTopic.TrayRemoved, {id});
     }));
 
-    this.sub.add(this.conveyorView.trayFilled$.subscribe(id => {
-      eventService.emit(GameTopic.TrayFilled, {id});
+    this.sub.add(this.conveyorView.trayFilled$.subscribe(ev => {
+      eventService.emit(GameTopic.TrayFilled, ev);
     }))
 
     this.sub.add(eventService.addEventListener<TrayAddedEvent>(GameTopic.TrayAdded, ev => {

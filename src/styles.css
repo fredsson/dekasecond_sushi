@@ -1,7 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
 
 #app {
@@ -19,9 +18,9 @@ body {
 }
 
 .tray {
-  position: absolute;
+  position: relative;
   left: 0px;
-  top: 8px;
+  top: -122px;
   width: 115px;
   height: 115px;
   background-color: blue;
@@ -32,9 +31,37 @@ body {
   background-color: green;
 }
 
+#conveyor-container {
+  overflow: hidden;
+}
+
 .conveyor {
-  position:absolute;
+  position: relative;
   width: 300px;
   height: 130px;
   background-image: url('/assets/conveyor-belt.png');
+}
+
+.ingredient {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+}
+
+.ingredient__rice {
+  left: 20px;
+  top: 200px;
+  background-color: wheat;
+}
+
+.ingredient__salmon {
+  left: 20px;
+  top: 400px;
+  background-color: salmon;
+}
+
+.ingredient__unknown {
+  left: 0;
+  bottom: 0;
+  background-color: hotpink;
 }

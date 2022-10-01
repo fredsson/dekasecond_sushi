@@ -1,4 +1,5 @@
 import { Subject, Subscription } from "rxjs";
+import { IngredientType } from "../../features/plate/plate.model";
 import { DragDropService } from "../../utils/dragdrop";
 import { TrayView } from "./tray.view";
 
@@ -24,7 +25,7 @@ export class ConveyorView {
   private trayRemoved = new Subject<number>();
   public trayRemoved$ = this.trayRemoved.asObservable();
 
-  private trayFilled = new Subject<number>();
+  private trayFilled = new Subject<{id: number, ingredients: IngredientType[]}>();
   public trayFilled$ = this.trayFilled.asObservable();
 
   constructor(private container: HTMLElement, private dragDropService: DragDropService) {
@@ -46,8 +47,8 @@ export class ConveyorView {
       sub.unsubscribe();
       this.trayRemoved.next(id);
     });
-    sub.add(tray.filled$.subscribe(() => {
-      this.trayFilled.next(id);
+    sub.add(tray.filled$.subscribe(ingredients => {
+      this.trayFilled.next({id, ingredients});
     }));
 
     this.trayItems.push({
