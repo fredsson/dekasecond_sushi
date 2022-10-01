@@ -1,7 +1,4 @@
-import { Observable, Subscription } from "rxjs";
-
-export class Conveyor {
-}
+import { TrayView } from "./tray.view";
 
 interface ConveyorItem {
   element: HTMLElement;
@@ -12,13 +9,12 @@ export class ConveyorView {
   private readonly conveyorSpeed = 60;
   private readonly conveyorElementWidthPx = 300;
 
-  private sub: Subscription;
-
   private root: HTMLElement;
 
   private conveyorItem: ConveyorItem;
+  private trayItems: TrayView[] = [];
 
-  constructor(private container: HTMLElement, dt$: Observable<number>) {
+  constructor(private container: HTMLElement) {
     this.root = document.createElement('div');
     container.appendChild(this.root);
 
@@ -26,15 +22,19 @@ export class ConveyorView {
     const noOfConveyors = Math.ceil(containerWidth / this.conveyorElementWidthPx) + 1;
 
     this.conveyorItem = this.spawnConveyor(container, noOfConveyors);
+  }
 
-    this.sub = dt$.subscribe(dt => {
-      this.moveConveyor(dt);
-    });
+  public addTray() {
+    this.trayItems.push(new TrayView(this.root, this.container.getBoundingClientRect().width));
+  }
+
+  public update(dt: number) {
+    this.moveConveyor(dt);
+    this.trayItems.forEach(i => i.move(-(this.conveyorSpeed * dt)));
   }
 
   public destroy() {
     this.container.removeChild(this.root);
-    this.sub.unsubscribe();
   }
 
   private moveConveyor(dt: number) {

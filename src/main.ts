@@ -1,7 +1,13 @@
-import { ConveyorView } from './features/conveyor/conveyor';
+import { PlateView } from './features/plate/plate';
+import { Game } from './game';
+import { Renderer } from './gfx/renderer';
 import { Timer } from './timer';
+import { DragDropService } from './utils/dragdrop';
+import { EventService } from './utils/events';
 
-let conveyorView: ConveyorView;
+let dragDropService: DragDropService;
+
+let plateView: PlateView;
 
 window.addEventListener('DOMContentLoaded', () => {
   console.log('Game started!');
@@ -12,5 +18,19 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   const timer = new Timer();
-  conveyorView = new ConveyorView(mainContainer, timer.dt$);
+  const eventService = new EventService();
+
+  const game = new Game(eventService);
+  const renderer = new Renderer(mainContainer, eventService);
+
+  timer.dt$.subscribe(dt => {
+    game.update(dt);
+
+    renderer.update(dt);
+  });
+
+  dragDropService = new DragDropService();
+
+
+  plateView = new PlateView(mainContainer, dragDropService);
 });

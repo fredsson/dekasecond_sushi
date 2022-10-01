@@ -8,9 +8,28 @@ body {
   height: 100%;
 }
 
+.plate {
+  position: absolute;
+  left: calc(50% - 58px);
+  top: 200px;
+  width: 115px;
+  height: 115px;
+  background-color: red;
+}
+
+.tray {
+  position: absolute;
+  left: 0px;
+  top: 8px;
+  width: 115px;
+  height: 115px;
+  background-color: blue;
+  z-index: 1;
+}
+
 .conveyor {
   position:absolute;
   width: 300px;
-  height: 80px;
+  height: 130px;
   background-image: url('/assets/conveyor-belt.png');
 }
