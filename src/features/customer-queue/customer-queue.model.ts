@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 import { EventService, GameTopic } from "../../utils/events";
 
 export interface TrayAddedEvent {
@@ -19,13 +19,15 @@ export class CustomerQueueModel {
   private fired = new Subject<void>();
   public fired$ = this.fired.asObservable();
 
+  private sub = new Subscription();
+
   constructor(private eventService: EventService) {
-    eventService.addEventListener<TrayRemovedEvent>(GameTopic.TrayRemoved, () => {
+    this.sub.add(eventService.addEventListener<TrayRemovedEvent>(GameTopic.TrayRemoved, () => {
       this.unhappyCustomers++;
       if (this.unhappyCustomers >= 3) {
         this.fired.next();
       }
-    });
+    }));
   }
 
   public update(dt: number) {
@@ -34,5 +36,9 @@ export class CustomerQueueModel {
       this.timeUntilNextCustomerInSec = 10;
       this.eventService.emit<TrayAddedEvent>(GameTopic.TrayAdded, { id: this.nextTrayId++ });
     }
+  }
+
+  public destroy() {
+    this.sub.unsubscribe();
   }
 }

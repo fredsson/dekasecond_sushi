@@ -20,8 +20,18 @@ window.addEventListener('DOMContentLoaded', () => {
   const timer = new Timer();
   const eventService = new EventService();
 
-  const game = new Game(eventService);
-  const renderer = new Renderer(mainContainer, eventService);
+  const restartCallback = () => {
+    game.destroy();
+    renderer.destroy();
+
+    alert('You failed to keep the customers happy!');
+
+    game = new Game(eventService, restartCallback);
+    renderer = new Renderer(mainContainer, eventService);
+  };
+
+  let game = new Game(eventService, restartCallback);
+  let renderer = new Renderer(mainContainer, eventService);
 
   timer.dt$.subscribe(dt => {
     game.update(dt);

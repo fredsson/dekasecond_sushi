@@ -4,16 +4,19 @@ import { EventService } from "./utils/events";
 export class Game {
   private customerQueue: CustomerQueueModel;
 
-  constructor(eventService: EventService) {
+  constructor(eventService: EventService, restartCallback: () => void) {
     this.customerQueue = new CustomerQueueModel(eventService);
 
     this.customerQueue.fired$.subscribe(() => {
-      alert('You failed to keep the customers happy!');
-      location.reload();
+      restartCallback();
     });
   }
 
   public update(dt: number) {
     this.customerQueue.update(dt);
+  }
+
+  public destroy() {
+    this.customerQueue.destroy();
   }
 }

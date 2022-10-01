@@ -25,21 +25,22 @@ export class ConveyorView {
 
   constructor(private container: HTMLElement) {
     this.root = document.createElement('div');
+    this.root.id = 'conveyor-container';
     container.appendChild(this.root);
 
     const containerWidth = container.getBoundingClientRect().width;
     const noOfConveyors = Math.ceil(containerWidth / this.conveyorElementWidthPx) + 1;
 
-    this.conveyorItem = this.spawnConveyor(container, noOfConveyors);
+    this.conveyorItem = this.spawnConveyor(this.root, noOfConveyors);
   }
 
   public addTray(id: number) {
     const tray = new TrayView(this.root, this.container.getBoundingClientRect().width);
     const sub = tray.reachedCustomer$.subscribe(() => {
-      this.trayRemoved.next(id);
       tray.destroy();
-      this.trayItems.filter(v => v.tray !== tray);
+      this.trayItems = this.trayItems.filter(v => v.tray !== tray);
       sub.unsubscribe();
+      this.trayRemoved.next(id);
     });
     this.trayItems.push({
       tray,
@@ -53,6 +54,7 @@ export class ConveyorView {
   }
 
   public destroy() {
+    this.trayItems.forEach(i => i.tray.destroy());
     this.container.removeChild(this.root);
   }
 

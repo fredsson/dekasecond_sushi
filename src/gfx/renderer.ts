@@ -13,5 +13,6 @@ export class Renderer {
   }
 
   public destroy() {
+    this.customerQueueView.destroy();
   }
 }
