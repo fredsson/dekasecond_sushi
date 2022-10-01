@@ -1,10 +1,6 @@
-import { Observable } from "rxjs";
+import { TrayAddedEvent } from "../../features/customer-queue/customer-queue.model";
 import { EventService, GameTopic } from "../../utils/events";
 import { ConveyorView } from "./conveyor.view";
-
-export interface CustomerQueueEvents {
-  trayAdded$: Observable<void>;
-}
 
 export class CustomerQueueView {
   conveyorView: ConveyorView;
@@ -12,8 +8,12 @@ export class CustomerQueueView {
   constructor(container: HTMLElement, eventService: EventService) {
     this.conveyorView = new ConveyorView(container);
 
-    eventService.addEventListener(GameTopic.TrayAdded, () => {
-      this.conveyorView.addTray();
+    this.conveyorView.trayRemoved$.subscribe(id => {
+      eventService.emit(GameTopic.TrayRemoved, {id});
+    });
+
+    eventService.addEventListener<TrayAddedEvent>(GameTopic.TrayAdded, ev => {
+      this.conveyorView.addTray(ev.id);
     });
   }
 

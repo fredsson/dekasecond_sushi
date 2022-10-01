@@ -1,7 +1,9 @@
 import { Subject, Subscription } from "rxjs";
 
 export enum GameTopic {
-  TrayAdded
+  TrayAdded,
+  TrayRemoved,
+  TrayFilled
 }
 
 export class EventService {

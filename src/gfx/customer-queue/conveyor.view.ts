@@ -1,8 +1,14 @@
+import { Subject, Subscription } from "rxjs";
 import { TrayView } from "./tray.view";
 
 interface ConveyorItem {
   element: HTMLElement;
   x: number;
+}
+
+interface TrayItem {
+  tray: TrayView;
+  reachedCustomerSub: Subscription;
 }
 
 export class ConveyorView {
@@ -12,7 +18,10 @@ export class ConveyorView {
   private root: HTMLElement;
 
   private conveyorItem: ConveyorItem;
-  private trayItems: TrayView[] = [];
+  private trayItems: TrayItem[] = [];
+
+  private trayRemoved = new Subject<number>();
+  public trayRemoved$ = this.trayRemoved.asObservable();
 
   constructor(private container: HTMLElement) {
     this.root = document.createElement('div');
@@ -24,13 +33,23 @@ export class ConveyorView {
     this.conveyorItem = this.spawnConveyor(container, noOfConveyors);
   }
 
-  public addTray() {
-    this.trayItems.push(new TrayView(this.root, this.container.getBoundingClientRect().width));
+  public addTray(id: number) {
+    const tray = new TrayView(this.root, this.container.getBoundingClientRect().width);
+    const sub = tray.reachedCustomer$.subscribe(() => {
+      this.trayRemoved.next(id);
+      tray.destroy();
+      this.trayItems.filter(v => v.tray !== tray);
+      sub.unsubscribe();
+    });
+    this.trayItems.push({
+      tray,
+      reachedCustomerSub: sub
+    });
   }
 
   public update(dt: number) {
     this.moveConveyor(dt);
-    this.trayItems.forEach(i => i.move(-(this.conveyorSpeed * dt)));
+    this.trayItems.forEach(i => i.tray.move(-(this.conveyorSpeed * dt)));
   }
 
   public destroy() {

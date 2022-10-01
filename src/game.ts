@@ -6,6 +6,11 @@ export class Game {
 
   constructor(eventService: EventService) {
     this.customerQueue = new CustomerQueueModel(eventService);
+
+    this.customerQueue.fired$.subscribe(() => {
+      alert('You failed to keep the customers happy!');
+      location.reload();
+    });
   }
 
   public update(dt: number) {
