@@ -1,0 +1,26 @@
+{
+  "name": "dekasecond_sushi",
+  "version": "0.0.0",
+  "description": "A Ludum Dare 51 Game",
+  "main": "index.js",
+  "scripts": {
+    "watch": "npx parcel -p 4200 src/index.html",
+    "build:production": "npx parcel build --public-url /ld/50 src/html/production/index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fredsson/dekasecond_sushi.git"
+  },
+  "author": "Fredrik Andersson",
+  "license": "GPL-2.0-only",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/fredsson/dekasecond_sushi/issues"
+  },
+  "homepage": "https://github.com/fredsson/dekasecond_sushi#readme",
+  "devDependencies": {
+    "parcel": "^2.7.0",
+    "typescript": "^4.8.4"
+  }
+}
