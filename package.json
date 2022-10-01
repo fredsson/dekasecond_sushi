@@ -2,9 +2,8 @@
   "name": "dekasecond_sushi",
   "version": "0.0.0",
   "description": "A Ludum Dare 51 Game",
-  "main": "index.js",
   "scripts": {
-    "watch": "npx parcel -p 4200 src/index.html",
+    "watch": "npx parcel -p 4200 src/html/local/index.html",
     "build:production": "npx parcel build --public-url /ld/50 src/html/production/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
