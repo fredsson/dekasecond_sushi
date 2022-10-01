@@ -1,4 +1,5 @@
 import { Subject, Subscription } from "rxjs";
+import { DragDropService } from "../../utils/dragdrop";
 import { TrayView } from "./tray.view";
 
 interface ConveyorItem {
@@ -23,7 +24,10 @@ export class ConveyorView {
   private trayRemoved = new Subject<number>();
   public trayRemoved$ = this.trayRemoved.asObservable();
 
-  constructor(private container: HTMLElement) {
+  private trayFilled = new Subject<number>();
+  public trayFilled$ = this.trayFilled.asObservable();
+
+  constructor(private container: HTMLElement, private dragDropService: DragDropService) {
     this.root = document.createElement('div');
     this.root.id = 'conveyor-container';
     container.appendChild(this.root);
@@ -35,13 +39,17 @@ export class ConveyorView {
   }
 
   public addTray(id: number) {
-    const tray = new TrayView(this.root, this.container.getBoundingClientRect().width);
+    const tray = new TrayView(this.root, this.container.getBoundingClientRect().width, this.dragDropService);
     const sub = tray.reachedCustomer$.subscribe(() => {
       tray.destroy();
       this.trayItems = this.trayItems.filter(v => v.tray !== tray);
       sub.unsubscribe();
       this.trayRemoved.next(id);
     });
+    sub.add(tray.filled$.subscribe(() => {
+      this.trayFilled.next(id);
+    }));
+
     this.trayItems.push({
       tray,
       reachedCustomerSub: sub

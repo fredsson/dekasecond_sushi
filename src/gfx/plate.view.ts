@@ -1,37 +1,38 @@
+import { Subscription } from "rxjs";
 import { DragDropService, Draggable } from "../utils/dragdrop";
 
 export class PlateView {
-  private root: HTMLElement
+  private root: HTMLElement;
+  private sub = new Subscription();
+  private dropSub?: Subscription;
 
   constructor(private container: HTMLElement, dragDropService: DragDropService) {
     this.root = document.createElement('div');
     this.root.classList.add('plate');
 
-    dragDropService.dragStarted$.subscribe(draggable => {
+    this.sub.add(dragDropService.dragStarted$.subscribe(draggable => {
       if (draggable === Draggable.Plate) {
         this.root.style.display = 'none';
       }
-    });
+    }));
 
-    dragDropService.dropped$.subscribe(() => {
+    this.sub.add(dragDropService.dropped$.subscribe(() => {
       this.root.style.display = 'block';
-    })
+    }));
 
-    this.root.addEventListener('mousedown',() => {
-      console.log('click!!');
+    this.sub.add(dragDropService.fromEvent(this.root, 'mousedown').subscribe(() => {
       dragDropService.drag();
-      // add shadow element here!
-      document.addEventListener('mouseup', event => {
-        dragDropService.drop();
-        console.log('mouseup!!', event.target);
-        // remove shadow element, find what was dropped on!
+      this.dropSub = dragDropService.fromWindowEvent<MouseEvent>('mouseup').subscribe(ev => {
+        this.dropSub?.unsubscribe();
+        dragDropService.drop(ev);
       });
-    });
+    }));
 
     container.appendChild(this.root);
   }
 
   public destroy() {
+    this.sub.unsubscribe();
     this.container.removeChild(this.root);
   }
 }

@@ -27,6 +27,10 @@ body {
   z-index: 1;
 }
 
+.tray--filled {
+  background-color: green;
+}
+
 .conveyor {
   position:absolute;
   width: 300px;

@@ -1,4 +1,4 @@
-import { Observable, Subject } from "rxjs";
+import { fromEvent, Observable, Subject } from "rxjs";
 
 export enum Draggable {
   Plate,
@@ -8,6 +8,11 @@ export enum DropTarget {
   ConveyorTray,
 }
 
+export interface DropEvent {
+  clientX: number;
+  clientY: number;
+}
+
 
 export class DragDropService {
 
@@ -15,17 +20,25 @@ export class DragDropService {
   public dragStarted$: Observable<Draggable> = this.dragStarted.asObservable();
 
 
-  private dropped = new Subject<void>();
+  private dropped = new Subject<DropEvent>();
   public dropped$ = this.dropped.asObservable();
 
   public drag() {
     this.dragStarted.next(Draggable.Plate);
   }
 
-  public drop() {
-    this.dropped.next();
+  public drop(ev: MouseEvent) {
+    this.dropped.next({ clientX: ev.clientX, clientY: ev.clientY});
   }
 
   public registerDropTarget() {
+  }
+
+  public fromWindowEvent<T>(eventName: string): Observable<T> {
+    return fromEvent<T>(window, eventName);
+  }
+
+  public fromEvent<T>(element: HTMLElement, eventName: string): Observable<T> {
+    return fromEvent<T>(element, eventName);
   }
 }

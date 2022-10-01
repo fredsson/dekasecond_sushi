@@ -14,6 +14,7 @@ export class CustomerQueueModel {
 
   private timeUntilNextCustomerInSec = 2;
 
+  private waitingCustomers: number[] = [];
   private unhappyCustomers = 0;
 
   private fired = new Subject<void>();
@@ -22,19 +23,27 @@ export class CustomerQueueModel {
   private sub = new Subscription();
 
   constructor(private eventService: EventService) {
-    this.sub.add(eventService.addEventListener<TrayRemovedEvent>(GameTopic.TrayRemoved, () => {
-      this.unhappyCustomers++;
+    this.sub.add(eventService.addEventListener<TrayRemovedEvent>(GameTopic.TrayRemoved, ({id}) => {
+      const unhappy = this.waitingCustomers.includes(id);
+      if (unhappy) {
+        this.unhappyCustomers++;
+      }
       if (this.unhappyCustomers >= 3) {
         this.fired.next();
       }
+    }));
+    this.sub.add(eventService.addEventListener<any>(GameTopic.TrayFilled, ({id}) => {
+      this.waitingCustomers = this.waitingCustomers.filter(v => v !== id);
     }));
   }
 
   public update(dt: number) {
     this.timeUntilNextCustomerInSec -= dt;
     if (this.timeUntilNextCustomerInSec < 0) {
+      const id = this.nextTrayId++;
       this.timeUntilNextCustomerInSec = 10;
-      this.eventService.emit<TrayAddedEvent>(GameTopic.TrayAdded, { id: this.nextTrayId++ });
+      this.waitingCustomers.push(id);
+      this.eventService.emit<TrayAddedEvent>(GameTopic.TrayAdded, {id});
     }
   }
 
