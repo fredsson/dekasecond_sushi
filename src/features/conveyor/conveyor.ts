@@ -11,15 +11,12 @@ interface ConveyorItem {
 export class ConveyorView {
   private readonly conveyorSpeed = 60;
   private readonly conveyorElementWidthPx = 300;
-  private readonly conveyorElementWidthWithOverlap = 299;
 
   private sub: Subscription;
 
   private root: HTMLElement;
 
-  private elements: ConveyorItem[] = [];
-
-  private endOfLastConveyor: number;
+  private conveyorItem: ConveyorItem;
 
   constructor(private container: HTMLElement, dt$: Observable<number>) {
     this.root = document.createElement('div');
@@ -27,12 +24,11 @@ export class ConveyorView {
 
     const containerWidth = container.getBoundingClientRect().width;
     const noOfConveyors = Math.ceil(containerWidth / this.conveyorElementWidthPx) + 1;
-    this.endOfLastConveyor = (noOfConveyors - 1) * this.conveyorElementWidthWithOverlap;
 
-    Array.from({length: noOfConveyors}).forEach((_, index) => this.spawnConveyor(container, index));
+    this.conveyorItem = this.spawnConveyor(container, noOfConveyors);
 
     this.sub = dt$.subscribe(dt => {
-      this.moveConveyors(dt);
+      this.moveConveyor(dt);
     });
   }
 
@@ -41,30 +37,25 @@ export class ConveyorView {
     this.sub.unsubscribe();
   }
 
-  private moveConveyors(dt: number) {
-    this.elements.forEach(item => {
-      item.x -= this.conveyorSpeed * dt;
+  private moveConveyor(dt: number) {
+    this.conveyorItem.x -= this.conveyorSpeed * dt;
 
-      if (item.x < -this.conveyorElementWidthWithOverlap) {
-        item.x = this.endOfLastConveyor;
-      }
-
-      // TODO: maybe use cool css animations here instead
-      item.element.style.left = `${item.x}px`;
-    });
+    if (this.conveyorItem.x < -this.conveyorElementWidthPx) {
+      this.conveyorItem.x = 0;
+    }
+    // TODO: maybe use cool css animations here instead
+    this.conveyorItem.element.style.left = `${this.conveyorItem.x}px`;
   }
 
-  private spawnConveyor(container: HTMLElement, position: number) {
+  private spawnConveyor(container: HTMLElement, noOfConveyorsNeeded: number) {
     const elem = document.createElement('div');
     elem.classList.add('conveyor');
-    elem.style.left = `${(position * this.conveyorElementWidthWithOverlap)}px`;
-    elem.style.zIndex = `${position}`;
-
-    this.elements.push({
-      element: elem,
-      x: position * this.conveyorElementWidthWithOverlap,
-    });
+    elem.style.width = `${this.conveyorElementWidthPx * noOfConveyorsNeeded}px`
 
     container.appendChild(elem);
+    return {
+      element: elem,
+      x: 0,
+    };
   }
 }
