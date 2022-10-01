@@ -1,10 +1,11 @@
 import { Subscription } from "rxjs";
 import { IngredientType } from "../../features/plate/plate.model";
 import { DragDropService, Draggable, eventIsTouchEvent } from "../../utils/dragdrop";
+import { View } from "../renderer";
 
 
 
-export class IngredientView {
+export class IngredientView implements View {
   private static readonly ingredientTypeToStyle: Map<IngredientType, string> = new Map([
     [IngredientType.Rice, 'ingredient__rice'],
     [IngredientType.Salmon, 'ingredient__salmon'],
