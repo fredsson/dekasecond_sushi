@@ -1,4 +1,4 @@
-import { DragDropService, Draggable } from "../../utils/dragdrop";
+import { DragDropService, Draggable } from "../utils/dragdrop";
 
 export class PlateView {
   private root: HTMLElement
