@@ -3,7 +3,8 @@ import { Subject, Subscription } from "rxjs";
 export enum GameTopic {
   TrayAdded,
   TrayRemoved,
-  TrayFilled
+  TrayFilled,
+  CustomerOrderCorrect
 }
 
 export class EventService {

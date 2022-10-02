@@ -9,6 +9,7 @@ interface ConveyorItem {
 }
 
 interface TrayItem {
+  trayId: number;
   tray: TrayView;
   reachedCustomerSub: Subscription;
 }
@@ -57,9 +58,17 @@ export class ConveyorView {
     }));
 
     this.trayItems.push({
+      trayId: id,
       tray,
       reachedCustomerSub: sub
     });
+  }
+
+  public completeTray(trayId: number) {
+    const trayItem = this.trayItems.find(i => i.trayId === trayId);
+    if (trayItem) {
+      trayItem.tray.complete();
+    }
   }
 
   public update(dt: number) {

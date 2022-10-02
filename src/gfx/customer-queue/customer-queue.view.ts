@@ -1,5 +1,5 @@
 import { Subscription } from "rxjs";
-import { TrayAddedEvent } from "../../features/customer-queue/customer-queue.model";
+import { CustomerOrderCorrectEvent, TrayAddedEvent } from "../../features/customer-queue/customer-queue.model";
 import { DragDropService } from "../../utils/dragdrop";
 import { EventService, GameTopic } from "../../utils/events";
 import { View } from "../renderer";
@@ -22,6 +22,10 @@ export class CustomerQueueView implements View {
 
     this.sub.add(eventService.addEventListener<TrayAddedEvent>(GameTopic.TrayAdded, ev => {
       this.conveyorView.addTray(ev.id);
+    }));
+
+    this.sub.add(eventService.addEventListener<CustomerOrderCorrectEvent>(GameTopic.CustomerOrderCorrect, ev => {
+      this.conveyorView.completeTray(ev.trayId);
     }));
   }
 

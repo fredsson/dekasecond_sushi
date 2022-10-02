@@ -37,11 +37,14 @@ export class TrayView {
           const insideY = ev.clientY >= blah.top && ev.clientY <= blah.top + blah.height;
           if (insideX && insideY) {
             this.filled.next(ev.ingredients ?? []);
-            this.root.classList.add('tray--filled');
           }
         });
       }
     }));
+  }
+
+  public complete() {
+    this.root.classList.add('tray--filled');
   }
 
   public move(distance: number) {

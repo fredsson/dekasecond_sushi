@@ -11,8 +11,12 @@ export interface TrayRemovedEvent {
   id: number;
 }
 
+export interface CustomerOrderCorrectEvent {
+  trayId: number;
+}
+
 interface Customer {
-  id: number;
+  trayId: number;
   expectedIngredients: IngredientType[];
 }
 
@@ -31,7 +35,7 @@ export class CustomerQueueModel {
 
   constructor(private eventService: EventService) {
     this.sub.add(eventService.addEventListener<TrayRemovedEvent>(GameTopic.TrayRemoved, ({id}) => {
-      const unhappy = this.waitingCustomers.find(customer => customer.id === id);
+      const unhappy = this.waitingCustomers.find(customer => customer.trayId === id);
       if (isValueDefined(unhappy)) {
         this.unhappyCustomers++;
       }
@@ -40,13 +44,17 @@ export class CustomerQueueModel {
       }
     }));
     this.sub.add(eventService.addEventListener<any>(GameTopic.TrayFilled, ({id, ingredients}) => {
-      this.waitingCustomers = this.waitingCustomers.filter(v => {
-        if (v.id !== id) {
-          return true;
-        }
+      const customer = this.waitingCustomers.find(c => c.trayId === id);
+      if (!customer) {
+        return;
+      }
 
-        return !this.compareIngredients(v.expectedIngredients, ingredients);
-      });
+      const ingredientsMatches = this.compareIngredients(customer.expectedIngredients, ingredients);
+      if (!ingredientsMatches) {
+        return;
+      }
+      this.waitingCustomers = this.waitingCustomers.filter(v => v.trayId !== customer.trayId);
+      this.eventService.emit<CustomerOrderCorrectEvent>(GameTopic.CustomerOrderCorrect, {trayId: id});
     }));
   }
 
@@ -55,7 +63,7 @@ export class CustomerQueueModel {
     if (this.timeUntilNextCustomerInSec < 0) {
       const id = this.nextTrayId++;
       this.timeUntilNextCustomerInSec = 10;
-      this.waitingCustomers.push({id, expectedIngredients: [IngredientType.Rice, IngredientType.Salmon]});
+      this.waitingCustomers.push({trayId: id, expectedIngredients: [IngredientType.Rice, IngredientType.Salmon]});
       this.eventService.emit<TrayAddedEvent>(GameTopic.TrayAdded, {id});
     }
   }
