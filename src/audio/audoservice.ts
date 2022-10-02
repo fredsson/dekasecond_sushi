@@ -97,6 +97,7 @@ export class AudioService {
         this.currentBgm = this.nextBgm;
         this.currentBgm.play();
         this.nextBgm = undefined;
+        this.bgVolume = 0;
       }
     } else if (this.bgVolume <= 0.3 && this.currentBgm) {
       this.bgVolume += dt * 0.05;
