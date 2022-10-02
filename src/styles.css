@@ -38,6 +38,18 @@ body {
   background-color: green;
 }
 
+.order {
+  position:relative;
+  left: -5px;
+  top: 5px;
+  width: 130px;
+  height: 50px;
+}
+
+.order__regular-salmon {
+  background-image: url('/assets/order_salmon_regular.png');
+}
+
 #conveyor-container {
   overflow: hidden;
 }

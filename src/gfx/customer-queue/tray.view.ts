@@ -20,6 +20,10 @@ export class TrayView {
     this.root = document.createElement('div');
     this.root.classList.add('tray');
 
+    const order = document.createElement('div');
+    order.classList.add('order', 'order__regular-salmon');
+    this.root.appendChild(order);
+
     container.appendChild(this.root);
 
     this.x = startX;
