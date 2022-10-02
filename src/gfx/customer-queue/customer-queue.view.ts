@@ -27,6 +27,14 @@ export class CustomerQueueView implements View {
     this.sub.add(eventService.addEventListener<CustomerOrderCorrectEvent>(GameTopic.CustomerOrderCorrect, ev => {
       this.conveyorView.completeTray(ev.trayId);
     }));
+
+    this.sub.add(eventService.addEventListener(GameTopic.CustomerRushHourStarted, () => {
+      this.conveyorView.startRushHour();
+    }));
+
+    this.sub.add(eventService.addEventListener(GameTopic.CustomerRushHourEnded, () => {
+      this.conveyorView.endRushHour();
+    }));
   }
 
   public update(dt: number) {

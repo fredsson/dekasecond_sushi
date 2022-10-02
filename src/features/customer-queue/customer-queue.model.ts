@@ -29,6 +29,10 @@ export class CustomerQueueModel {
   private waitingCustomers: Customer[] = [];
   private unhappyCustomers = 0;
 
+  private customersToNextRushHour = this.calculateCustomersToNextRushHour();
+  private customersToRushHourEnds = 4;
+  private inRushHour = false;
+
   private fired = new Subject<void>();
   public fired$ = this.fired.asObservable();
 
@@ -62,6 +66,8 @@ export class CustomerQueueModel {
   public update(dt: number) {
     this.timeUntilNextCustomerInSec -= dt;
     if (this.timeUntilNextCustomerInSec < 0) {
+      this.updateRushHourCustomers();
+
       const id = this.nextTrayId++;
       this.timeUntilNextCustomerInSec = 10;
       const expectedIngredients = this.generateExpectedIngredients();
@@ -81,6 +87,23 @@ export class CustomerQueueModel {
     })
   }
 
+  private updateRushHourCustomers() {
+    if (this.inRushHour) {
+      this.customersToRushHourEnds--;
+      if (this.customersToRushHourEnds <= 0) {
+        this.inRushHour = false;
+        this.eventService.emit(GameTopic.CustomerRushHourEnded);
+        this.customersToNextRushHour = this.calculateCustomersToNextRushHour();
+      }
+    } else {
+      this.customersToNextRushHour--;
+      if (this.customersToNextRushHour <= 0) {
+        this.eventService.emit(GameTopic.CustomerRushHourStarted);
+        this.inRushHour = true;
+      }
+    }
+  }
+
   private generateExpectedIngredients(): IngredientType[] {
     const ingredients = [IngredientType.Rice];
 
@@ -97,5 +120,9 @@ export class CustomerQueueModel {
     }
 
     return ingredients;
+  }
+
+  private calculateCustomersToNextRushHour(): number {
+    return 2 + Math.round((Math.random() * 5));
   }
 }

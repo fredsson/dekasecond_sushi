@@ -15,7 +15,8 @@ interface TrayItem {
 }
 
 export class ConveyorView {
-  private readonly conveyorSpeed = 60;
+  private readonly defaultConveyorSpeed = 80;
+  private conveyorSpeed = this.defaultConveyorSpeed;
   private readonly conveyorElementWidthPx = 300;
 
   private root: HTMLElement;
@@ -69,6 +70,14 @@ export class ConveyorView {
     if (trayItem) {
       trayItem.tray.complete();
     }
+  }
+
+  public startRushHour() {
+    this.conveyorSpeed = 60 + Math.round(Math.random() * 80);
+  }
+
+  public endRushHour() {
+    this.conveyorSpeed = this.defaultConveyorSpeed;
   }
 
   public update(dt: number) {

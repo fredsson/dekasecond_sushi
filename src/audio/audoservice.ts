@@ -15,9 +15,11 @@ export class AudioService {
   private bgVolume = 0;
 
   private currentBgm?: HTMLAudioElement;
+  private nextBgm?: HTMLAudioElement;
 
 
   private orderSoundEffects: Map<IngredientType, HTMLAudioElement[]> = new Map();
+  private rushHourBgm?: HTMLAudioElement;
 
   constructor(eventService: EventService) {
     const bg1 = document.getElementById('bg1');
@@ -47,6 +49,7 @@ export class AudioService {
 
     this.orderSoundEffects.set(IngredientType.Salmon, orderSalmonEffects);
 
+    this.rushHourBgm = this.getAudioElement('bg_rush_hour');
 
     eventService.addEventListener(GameTopic.IngredientAdded, () => {
       const addTray = this.soundEffects.get('ingredients_on_plate');
@@ -61,15 +64,37 @@ export class AudioService {
       const effects = this.orderSoundEffects.get(lastIngredient);
       if (effects) {
         const index = Math.round(Math.random() * (effects.length - 1));
-        console.log(index);
         effects[index].play();
       }
     });
 
+    eventService.addEventListener(GameTopic.CustomerRushHourStarted, () => {
+      const rushHour = this.getAudioElement('rush_hour');
+      if (rushHour) {
+        this.nextBgm = this.rushHourBgm;
+        setTimeout(() => rushHour.play(), 100);
+      }
+    });
+
+    eventService.addEventListener(GameTopic.CustomerRushHourEnded, () => {
+      const rushHour = this.getAudioElement('rush_hour_end')
+      if (rushHour) {
+        this.nextBgm = this.backgroundAudioElements[0];
+        rushHour.play();
+      }
+    });
   }
 
   public update(dt: number) {
-    if (this.bgVolume <= 0.3 && this.currentBgm) {
+    if (this.nextBgm) {
+      this.bgVolume -= dt * 0.05;
+      if (this.bgVolume <= 0) {
+        this.currentBgm?.pause();
+        this.currentBgm = this.nextBgm;
+        this.currentBgm.play();
+        this.nextBgm = undefined;
+      }
+    } else if (this.bgVolume <= 0.3 && this.currentBgm) {
       this.bgVolume += dt * 0.05;
       this.currentBgm.volume = this.bgVolume;
     }

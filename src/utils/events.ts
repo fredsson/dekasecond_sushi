@@ -5,6 +5,8 @@ export enum GameTopic {
   TrayRemoved,
   TrayFilled,
   CustomerOrderCorrect,
+  CustomerRushHourStarted,
+  CustomerRushHourEnded,
   IngredientAdded
 }
 
