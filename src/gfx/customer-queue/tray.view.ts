@@ -28,7 +28,6 @@ export class TrayView {
     this.sub.add(dragDropService.dragStarted$.subscribe(draggable => {
       if (draggable.type === Draggable.Plate) {
         this.draggableSub = dragDropService.dropped$.subscribe(ev => {
-          console.log(ev);
           const blah = this.root.getBoundingClientRect();
           const insideX = ev.clientX >= blah.left && ev.clientX <= blah.left + blah.width;
           const insideY = ev.clientY >= blah.top && ev.clientY <= blah.top + blah.height;

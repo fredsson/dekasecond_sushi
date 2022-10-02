@@ -33,7 +33,7 @@ export class IngredientView implements View {
     this.sub.add(dragDropService.startEvents(this.root).subscribe(() => {
       dragDropService.drag({type: Draggable.Ingredient, ingredientType: this.type});
 
-      this.dropSub = dragDropService.endEvents(this.root).subscribe(ev => {
+      this.dropSub = dragDropService.endEvents((window as any)).subscribe(ev => {
         this.dropSub?.unsubscribe();
         if (eventIsTouchEvent(ev)) {
           dragDropService.drop({
