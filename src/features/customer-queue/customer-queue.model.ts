@@ -84,9 +84,14 @@ export class CustomerQueueModel {
   private generateExpectedIngredients(): IngredientType[] {
     const ingredients = [IngredientType.Rice];
 
-    const isAvocado = Math.random() > 0.7;
+    const v = Math.random();
+
+    const isAvocado = v > 0.3 && v <= 0.6;
+    const isTuna = v > 0.6;
     if (isAvocado) {
       ingredients.push(IngredientType.Avocado);
+    } else if (isTuna) {
+      ingredients.push(IngredientType.Tuna);
     } else {
       ingredients.push(IngredientType.Salmon);
     }

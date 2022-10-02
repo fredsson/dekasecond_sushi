@@ -10,6 +10,7 @@ export class IngredientView implements View {
     [IngredientType.Rice, 'ingredient__rice'],
     [IngredientType.Salmon, 'ingredient__salmon'],
     [IngredientType.Avocado, 'ingredient__avocado'],
+    [IngredientType.Tuna, 'ingredient__tuna'],
   ]);
 
   private root: HTMLElement;

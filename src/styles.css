@@ -54,6 +54,10 @@ body {
   background-image: url('/assets/order_avocado_regular.png');
 }
 
+.order__regular-tuna {
+  background-image: url('/assets/order_tuna_regular.png');
+}
+
 #conveyor-container {
   overflow: hidden;
 }
@@ -83,13 +87,19 @@ body {
   background-image: url('/assets/salmon.png')
 }
 
+.ingredient__tuna {
+  left: 20px;
+  top: 500px;
+  background-image: url('/assets/tuna.png')
+}
+
 .ingredient__avocado {
   left: 200px;
   top: 400px;
   background-image: url('/assets/avocado.png')
 }
 
-.ingredient__rice--placed, .ingredient__salmon--placed, .ingredient__avocado--placed  {
+.ingredient__rice--placed, .ingredient__salmon--placed, .ingredient__tuna--placed, .ingredient__avocado--placed  {
   left: 15px !important;
   top: 25px !important;
 }

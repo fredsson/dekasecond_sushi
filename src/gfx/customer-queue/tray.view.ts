@@ -24,6 +24,8 @@ export class TrayView {
     const lastIngredient = expectedIngredients[expectedIngredients.length - 1];
     if (lastIngredient === IngredientType.Avocado) {
       order.classList.add('order', 'order__regular-avocado');
+    } else if (lastIngredient === IngredientType.Tuna) {
+      order.classList.add('order', 'order__regular-tuna');
     } else {
       order.classList.add('order', 'order__regular-salmon');
     }
