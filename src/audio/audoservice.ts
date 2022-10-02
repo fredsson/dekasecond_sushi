@@ -83,6 +83,10 @@ export class AudioService {
         rushHour.play();
       }
     });
+
+    eventService.addEventListener(GameTopic.PlayerFired, () => {
+      this.nextBgm = this.backgroundAudioElements[0];
+    });
   }
 
   public update(dt: number) {

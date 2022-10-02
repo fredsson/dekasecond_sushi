@@ -7,7 +7,8 @@ export enum GameTopic {
   CustomerOrderCorrect,
   CustomerRushHourStarted,
   CustomerRushHourEnded,
-  IngredientAdded
+  IngredientAdded,
+  PlayerFired
 }
 
 export class EventService {

@@ -1,5 +1,5 @@
 import { CustomerQueueModel } from "./features/customer-queue/customer-queue.model";
-import { EventService } from "./utils/events";
+import { EventService, GameTopic } from "./utils/events";
 
 export class Game {
   private customerQueue: CustomerQueueModel;
@@ -8,6 +8,7 @@ export class Game {
     this.customerQueue = new CustomerQueueModel(eventService);
 
     this.customerQueue.fired$.subscribe(() => {
+      eventService.emit(GameTopic.PlayerFired);
       restartCallback();
     });
   }
