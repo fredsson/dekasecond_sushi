@@ -1,4 +1,4 @@
-import { defer, fromEvent, merge, Observable, Subject } from "rxjs";
+import { debounceTime, defer, fromEvent, merge, Observable, Subject } from "rxjs";
 import { IngredientType } from "../features/plate/plate.model";
 import { isValueDefined } from "./sanity";
 
@@ -41,14 +41,14 @@ export class DragDropService {
     return defer(() => merge(
       fromEvent<MouseEvent>(element, 'mousedown'),
       fromEvent<TouchEvent>(element, 'touchstart'),
-    ))
+    ).pipe(debounceTime(0)))
   }
 
   public endEvents(element: HTMLElement): Observable<MouseEvent | TouchEvent> {
     return defer(() => merge(
       fromEvent<MouseEvent>(element, 'mouseup'),
       fromEvent<TouchEvent>(element, 'touchend'),
-    ))
+    ).pipe(debounceTime(0)))
   }
 
   public drag(item: DraggableItem) {

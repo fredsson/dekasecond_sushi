@@ -4,13 +4,16 @@ import { DragDropService } from "../../utils/dragdrop";
 import { EventService, GameTopic } from "../../utils/events";
 import { View } from "../renderer";
 import { ConveyorView } from "./conveyor.view";
+import { CustomerView } from "./customer.view";
 
 export class CustomerQueueView implements View {
   private conveyorView: ConveyorView;
+  private customerView: CustomerView;
   private sub = new Subscription();
 
   constructor(container: HTMLElement, eventService: EventService, dragDropService: DragDropService) {
     this.conveyorView = new ConveyorView(container, dragDropService);
+    this.customerView = new CustomerView(container, eventService);
 
     this.sub.add(this.conveyorView.trayRemoved$.subscribe(id => {
       eventService.emit(GameTopic.TrayRemoved, {id});
@@ -44,5 +47,6 @@ export class CustomerQueueView implements View {
   public destroy() {
     this.sub.unsubscribe();
     this.conveyorView.destroy();
+    this.customerView.destroy();
   }
 }

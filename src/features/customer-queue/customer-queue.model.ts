@@ -42,6 +42,7 @@ export class CustomerQueueModel {
     this.sub.add(eventService.addEventListener<TrayRemovedEvent>(GameTopic.TrayRemoved, ({id}) => {
       const unhappy = this.waitingCustomers.find(customer => customer.trayId === id);
       if (isValueDefined(unhappy)) {
+        eventService.emit(GameTopic.CustomerUnhappy);
         this.unhappyCustomers++;
       }
       if (this.unhappyCustomers >= 3) {
