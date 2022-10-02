@@ -19,6 +19,7 @@ body {
 
 .tray {
   position: relative;
+  display:inline-block;
   left: 0px;
   top: -122px;
   width: 115px;
