@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const timer = new Timer();
   const eventService = new EventService();
   const dragDropService = new DragDropService();
-  const audioService = new AudioService();
+  const audioService = new AudioService(eventService);
 
 
   const restartCallback = () => {

@@ -4,7 +4,8 @@ export enum GameTopic {
   TrayAdded,
   TrayRemoved,
   TrayFilled,
-  CustomerOrderCorrect
+  CustomerOrderCorrect,
+  IngredientAdded
 }
 
 export class EventService {

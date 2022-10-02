@@ -15,7 +15,7 @@ export class Renderer {
 
   constructor(container: HTMLElement, eventService: EventService, dragDropService: DragDropService) {
     this.views.push(new CustomerQueueView(container, eventService, dragDropService));
-    this.views.push(new PlateView(container, dragDropService));
+    this.views.push(new PlateView(container, eventService, dragDropService));
     this.views.push(new IngredientView(container, IngredientType.Rice, dragDropService));
     this.views.push(new IngredientView(container, IngredientType.Salmon, dragDropService));
   }
