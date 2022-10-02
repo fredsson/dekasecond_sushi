@@ -1,3 +1,4 @@
+import { AudioService } from './audio/audoservice';
 import { Game } from './game';
 import { Renderer } from './gfx/renderer';
 import { Timer } from './timer';
@@ -15,6 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const timer = new Timer();
   const eventService = new EventService();
   const dragDropService = new DragDropService();
+  const audioService = new AudioService();
 
 
   const restartCallback = () => {
@@ -30,8 +32,12 @@ window.addEventListener('DOMContentLoaded', () => {
   let game = new Game(eventService, restartCallback);
   let renderer = new Renderer(mainContainer, eventService, dragDropService);
 
+  audioService.playRandomBackground();
+
   timer.dt$.subscribe(dt => {
     game.update(dt);
+
+    audioService.update(dt);
 
     renderer.update(dt);
   });
