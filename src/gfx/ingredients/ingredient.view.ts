@@ -9,6 +9,7 @@ export class IngredientView implements View {
   private static readonly ingredientTypeToStyle: Map<IngredientType, string> = new Map([
     [IngredientType.Rice, 'ingredient__rice'],
     [IngredientType.Salmon, 'ingredient__salmon'],
+    [IngredientType.Avocado, 'ingredient__avocado'],
   ]);
 
   private root: HTMLElement;

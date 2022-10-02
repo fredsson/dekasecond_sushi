@@ -18,6 +18,7 @@ export class Renderer {
     this.views.push(new PlateView(container, eventService, dragDropService));
     this.views.push(new IngredientView(container, IngredientType.Rice, dragDropService));
     this.views.push(new IngredientView(container, IngredientType.Salmon, dragDropService));
+    this.views.push(new IngredientView(container, IngredientType.Avocado, dragDropService));
   }
 
   public update(dt: number) {

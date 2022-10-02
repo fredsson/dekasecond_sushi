@@ -21,7 +21,7 @@ export class CustomerQueueView implements View {
     }))
 
     this.sub.add(eventService.addEventListener<TrayAddedEvent>(GameTopic.TrayAdded, ev => {
-      this.conveyorView.addTray(ev.id);
+      this.conveyorView.addTray(ev.id, ev.expectedIngredients);
     }));
 
     this.sub.add(eventService.addEventListener<CustomerOrderCorrectEvent>(GameTopic.CustomerOrderCorrect, ev => {

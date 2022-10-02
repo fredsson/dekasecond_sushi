@@ -45,8 +45,8 @@ export class ConveyorView {
     this.conveyorItem = this.spawnConveyor(this.root, noOfConveyors);
   }
 
-  public addTray(id: number) {
-    const tray = new TrayView(this.trayContainer, this.container.getBoundingClientRect().width, this.dragDropService);
+  public addTray(id: number, expectedIngredients: IngredientType[]) {
+    const tray = new TrayView(this.trayContainer, this.container.getBoundingClientRect().width, expectedIngredients, this.dragDropService);
     const sub = tray.reachedCustomer$.subscribe(() => {
       tray.destroy();
       this.trayItems = this.trayItems.filter(v => v.tray !== tray);

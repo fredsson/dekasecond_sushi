@@ -50,6 +50,10 @@ body {
   background-image: url('/assets/order_salmon_regular.png');
 }
 
+.order__regular-avocado {
+  background-image: url('/assets/order_avocado_regular.png');
+}
+
 #conveyor-container {
   overflow: hidden;
 }
@@ -79,7 +83,13 @@ body {
   background-image: url('/assets/salmon.png')
 }
 
-.ingredient__rice--placed, .ingredient__salmon--placed  {
+.ingredient__avocado {
+  left: 200px;
+  top: 400px;
+  background-image: url('/assets/avocado.png')
+}
+
+.ingredient__rice--placed, .ingredient__salmon--placed, .ingredient__avocado--placed  {
   left: 15px !important;
   top: 25px !important;
 }

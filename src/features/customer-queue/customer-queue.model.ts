@@ -4,6 +4,7 @@ import { isValueDefined } from "../../utils/sanity";
 import { IngredientType } from "../plate/plate.model";
 
 export interface TrayAddedEvent {
+  expectedIngredients: IngredientType[];
   id: number;
 }
 
@@ -63,8 +64,9 @@ export class CustomerQueueModel {
     if (this.timeUntilNextCustomerInSec < 0) {
       const id = this.nextTrayId++;
       this.timeUntilNextCustomerInSec = 10;
-      this.waitingCustomers.push({trayId: id, expectedIngredients: [IngredientType.Rice, IngredientType.Salmon]});
-      this.eventService.emit<TrayAddedEvent>(GameTopic.TrayAdded, {id});
+      const expectedIngredients = this.generateExpectedIngredients();
+      this.waitingCustomers.push({trayId: id, expectedIngredients});
+      this.eventService.emit<TrayAddedEvent>(GameTopic.TrayAdded, {id, expectedIngredients});
     }
   }
 
@@ -77,5 +79,18 @@ export class CustomerQueueModel {
       const a = actual[index];
       return e === a;
     })
+  }
+
+  private generateExpectedIngredients(): IngredientType[] {
+    const ingredients = [IngredientType.Rice];
+
+    const isAvocado = Math.random() > 0.7;
+    if (isAvocado) {
+      ingredients.push(IngredientType.Avocado);
+    } else {
+      ingredients.push(IngredientType.Salmon);
+    }
+
+    return ingredients;
   }
 }

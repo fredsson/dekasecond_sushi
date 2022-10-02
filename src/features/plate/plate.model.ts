@@ -1,4 +1,5 @@
 export enum IngredientType {
   Rice = 'rice',
-  Salmon = 'salmon'
+  Salmon = 'salmon',
+  Avocado = 'avocado'
 }

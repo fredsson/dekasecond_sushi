@@ -16,12 +16,17 @@ export class TrayView {
   private sub = new Subscription();
   private draggableSub?: Subscription;
 
-  constructor(private container: HTMLElement, startX: number, dragDropService: DragDropService) {
+  constructor(private container: HTMLElement, startX: number, expectedIngredients: IngredientType[], dragDropService: DragDropService) {
     this.root = document.createElement('div');
     this.root.classList.add('tray');
 
     const order = document.createElement('div');
-    order.classList.add('order', 'order__regular-salmon');
+    const lastIngredient = expectedIngredients[expectedIngredients.length - 1];
+    if (lastIngredient === IngredientType.Avocado) {
+      order.classList.add('order', 'order__regular-avocado');
+    } else {
+      order.classList.add('order', 'order__regular-salmon');
+    }
     this.root.appendChild(order);
 
     container.appendChild(this.root);
