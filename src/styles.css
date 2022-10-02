@@ -58,7 +58,12 @@ body {
 .ingredient__salmon {
   left: 20px;
   top: 400px;
-  background-color: salmon;
+  background-image: url('/assets/salmon.png')
+}
+
+.ingredient__rice--placed, .ingredient__salmon--placed  {
+  left: 15px !important;
+  top: 25px !important;
 }
 
 .ingredient__unknown {

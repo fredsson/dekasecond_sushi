@@ -2,6 +2,7 @@ import { Subscription } from "rxjs";
 import { IngredientType } from "../features/plate/plate.model";
 import { DragDropService, Draggable, eventIsTouchEvent } from "../utils/dragdrop";
 import { isValueDefined } from "../utils/sanity";
+import { IngredientView } from "./ingredients/ingredient.view";
 import { View } from "./renderer";
 
 export class PlateView implements View {
@@ -10,6 +11,8 @@ export class PlateView implements View {
   private dropSub?: Subscription;
 
   private ingredients: IngredientType[] = [];
+
+  private ingredientViews: IngredientView[]  = [];
 
   constructor(private container: HTMLElement, dragDropService: DragDropService) {
     this.root = document.createElement('div');
@@ -24,6 +27,7 @@ export class PlateView implements View {
     this.sub.add(dragDropService.dropped$.subscribe(ev => {
       if (isValueDefined(ev.ingredientType)) {
         this.ingredients.push(ev.ingredientType);
+        this.ingredientViews.push(new IngredientView(this.root, ev.ingredientType));
       }
       this.root.style.display = 'block';
     }));
@@ -46,6 +50,8 @@ export class PlateView implements View {
           });
         }
         this.ingredients = [];
+        this.ingredientViews.forEach(v => v.destroy());
+        this.ingredientViews = [];
       });
     }));
 

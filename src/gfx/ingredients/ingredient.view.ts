@@ -15,13 +15,33 @@ export class IngredientView implements View {
   private sub = new Subscription();
   private dropSub?: Subscription;
 
-  constructor(private container: HTMLElement, private type: IngredientType, dragDropService: DragDropService) {
+  constructor(private container: HTMLElement, private type: IngredientType, dragDropService?: DragDropService) {
     this.root = document.createElement('div');
-    this.root.classList.add('ingredient', IngredientView.ingredientTypeToStyle.get(type) ?? 'ingredient__unknown');
+    if (dragDropService) {
+      this.root.classList.add('ingredient', IngredientView.ingredientTypeToStyle.get(type) ?? 'ingredient__unknown');
+    } else {
+      this.root.classList.add(
+        'ingredient',
+        IngredientView.ingredientTypeToStyle.get(type) ?? 'ingredient__unknown',
+        (IngredientView.ingredientTypeToStyle.get(type) ?? 'ingredient__unknown') + '--placed'
+      );
+    }
     container.appendChild(this.root);
+    if (dragDropService) {
+      this.setupDragAndDrop(dragDropService);
+    }
+  }
 
+  public update() {
+  }
+
+  public destroy() {
+    this.container.removeChild(this.root);
+  }
+
+  private setupDragAndDrop(dragDropService: DragDropService) {
     this.sub.add(dragDropService.dragStarted$.subscribe(draggable => {
-      if (draggable.type === Draggable.Ingredient && draggable.ingredientType === type) {
+      if (draggable.type === Draggable.Ingredient && draggable.ingredientType === this.type) {
         this.root.style.display = 'none';
       }
     }));
@@ -50,12 +70,5 @@ export class IngredientView implements View {
         }
       });
     }));
-  }
-
-  public update() {
-  }
-
-  public destroy() {
-    this.container.removeChild(this.root);
   }
 }
