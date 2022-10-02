@@ -1,11 +1,14 @@
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
+  background-color: lightblue;
 }
 
 #app {
   width: 100%;
   height: 100%;
+
 }
 
 .plate {
@@ -17,14 +20,17 @@ body {
   background-image: url('/assets/plate.png');
 }
 
+#tray-container {
+  position:absolute;
+  top: 8px;
+}
+
 .tray {
-  position: relative;
-  display:inline-block;
+  position: absolute;
   left: 0px;
-  top: -122px;
   width: 115px;
   height: 115px;
-  background-color: blue;
+  background-image: url('/assets/tray.png');
   z-index: 1;
 }
 

@@ -18,6 +18,7 @@ export class ConveyorView {
   private readonly conveyorElementWidthPx = 300;
 
   private root: HTMLElement;
+  private trayContainer: HTMLElement;
 
   private conveyorItem: ConveyorItem;
   private trayItems: TrayItem[] = [];
@@ -33,6 +34,10 @@ export class ConveyorView {
     this.root.id = 'conveyor-container';
     container.appendChild(this.root);
 
+    this.trayContainer = document.createElement('div');
+    this.trayContainer.id = 'tray-container';
+    this.root.appendChild(this.trayContainer);
+
     const containerWidth = container.getBoundingClientRect().width;
     const noOfConveyors = Math.ceil(containerWidth / this.conveyorElementWidthPx) + 1;
 
@@ -40,7 +45,7 @@ export class ConveyorView {
   }
 
   public addTray(id: number) {
-    const tray = new TrayView(this.root, this.container.getBoundingClientRect().width, this.dragDropService);
+    const tray = new TrayView(this.trayContainer, this.container.getBoundingClientRect().width, this.dragDropService);
     const sub = tray.reachedCustomer$.subscribe(() => {
       tray.destroy();
       this.trayItems = this.trayItems.filter(v => v.tray !== tray);
