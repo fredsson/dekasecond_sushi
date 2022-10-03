@@ -15,13 +15,14 @@ export interface View {
 export class Renderer {
   views: View[] = [];
 
-  mainMenu: MainMenuView;
+  mainMenu?: MainMenuView;
 
   constructor(container: HTMLElement, eventService: EventService, dragDropService: DragDropService) {
     this.mainMenu = new MainMenuView(container, eventService);
 
     eventService.addEventListener(GameTopic.GameStart, () => {
-      this.mainMenu.destroy();
+      this.mainMenu?.destroy();
+      this.mainMenu = undefined;
       this.views.push(new CustomerQueueView(container, eventService, dragDropService));
       this.views.push(new PlateView(container, eventService, dragDropService));
       this.views.push(new IngredientView(container, IngredientType.Rice, dragDropService));
@@ -37,7 +38,7 @@ export class Renderer {
   }
 
   public destroy() {
-    this.mainMenu.destroy();
+    this.mainMenu?.destroy();
     this.views.forEach(v => v.destroy());
     this.views = [];
   }
