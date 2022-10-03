@@ -1,3 +1,4 @@
+import { Subscription } from "rxjs";
 import { IngredientType } from "../features/plate/plate.model";
 import { DragDropService } from "../utils/dragdrop";
 import { EventService, GameTopic } from "../utils/events";
@@ -13,14 +14,16 @@ export interface View {
 }
 
 export class Renderer {
-  views: View[] = [];
+  private views: View[] = [];
 
-  mainMenu?: MainMenuView;
+  private mainMenu?: MainMenuView;
+
+  private sub: Subscription;
 
   constructor(container: HTMLElement, eventService: EventService, dragDropService: DragDropService) {
     this.mainMenu = new MainMenuView(container, eventService);
 
-    eventService.addEventListener(GameTopic.GameStart, () => {
+    this.sub = eventService.addEventListener(GameTopic.GameStart, () => {
       this.mainMenu?.destroy();
       this.mainMenu = undefined;
       this.views.push(new CustomerQueueView(container, eventService, dragDropService));
@@ -38,6 +41,7 @@ export class Renderer {
   }
 
   public destroy() {
+    this.sub.unsubscribe();
     this.mainMenu?.destroy();
     this.views.forEach(v => v.destroy());
     this.views = [];
