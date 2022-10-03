@@ -52,7 +52,7 @@ export class AudioService {
     this.rushHourBgm = this.getAudioElement('bg_rush_hour');
 
     eventService.addEventListener(GameTopic.GameStart, () => {
-      this.playRandomBackground();
+      this.nextBgm = this.backgroundAudioElements[0]
     });
 
     eventService.addEventListener(GameTopic.IngredientAdded, () => {
@@ -108,13 +108,6 @@ export class AudioService {
       this.currentBgm.volume = this.bgVolume;
     }
   }
-
-  private playRandomBackground() {
-    this.currentBgm = this.backgroundAudioElements[0];
-    this.bgVolume = 0;
-    this.currentBgm.play();
-  }
-
 
   private getAudioElement(name: string): HTMLAudioElement | undefined {
     const element = document.getElementById(name);
