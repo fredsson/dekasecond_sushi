@@ -26,8 +26,10 @@ export class CustomerView implements View {
 
     this.sub.add(eventService.addEventListener(GameTopic.CustomerUnhappy, () => {
       const happyCustomers = this.customers.filter(v => v.happy);
-      happyCustomers[0].element.classList.add('customer--angry');
-      happyCustomers[0].happy = false;
+      if (happyCustomers.length) {
+        happyCustomers[0].element.classList.add('customer--angry');
+        happyCustomers[0].happy = false;
+      }
     }));
 
 
