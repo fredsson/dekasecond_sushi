@@ -51,6 +51,10 @@ export class AudioService {
 
     this.rushHourBgm = this.getAudioElement('bg_rush_hour');
 
+    eventService.addEventListener(GameTopic.GameStart, () => {
+      this.playRandomBackground();
+    });
+
     eventService.addEventListener(GameTopic.IngredientAdded, () => {
       const addTray = this.soundEffects.get('ingredients_on_plate');
       if (addTray) {
@@ -105,7 +109,7 @@ export class AudioService {
     }
   }
 
-  public playRandomBackground() {
+  private playRandomBackground() {
     this.currentBgm = this.backgroundAudioElements[0];
     this.bgVolume = 0;
     this.currentBgm.play();
