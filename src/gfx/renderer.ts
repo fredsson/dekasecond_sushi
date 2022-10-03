@@ -7,6 +7,7 @@ import { HandView } from "./hand.view";
 import { IngredientView } from "./ingredients/ingredient.view";
 import { MainMenuView } from "./main-menu.view";
 import { PlateView } from "./plate.view";
+import { ScoreView } from "./score.view";
 
 export interface View {
   update(dt: number): void;
@@ -32,7 +33,8 @@ export class Renderer {
       this.views.push(new IngredientView(container, IngredientType.Salmon, dragDropService));
       this.views.push(new IngredientView(container, IngredientType.Avocado, dragDropService));
       this.views.push(new IngredientView(container, IngredientType.Tuna, dragDropService));
-      this.views.push(new HandView(container, dragDropService))
+      this.views.push(new HandView(container, dragDropService));
+      this.views.push(new ScoreView(container, eventService));
     });
   }
 

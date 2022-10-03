@@ -20,6 +20,14 @@ body {
   background-image: url('/assets/mainmenu.png');
 }
 
+#score-container {
+  position: absolute;
+  width: 100px;
+  height: 50px;
+  right: 200px;
+  bottom: 80px;
+}
+
 .plate {
   position: absolute;
   left: calc(50% - 58px);
