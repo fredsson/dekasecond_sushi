@@ -64,7 +64,7 @@ export class AudioService {
       const effects = this.orderSoundEffects.get(lastIngredient);
       if (effects) {
         const index = Math.round(Math.random() * (effects.length - 1));
-        effects[index].play();
+        this.playEffect(effects[index]);
       }
     });
 
@@ -72,7 +72,7 @@ export class AudioService {
       const rushHour = this.getAudioElement('rush_hour');
       if (rushHour) {
         this.nextBgm = this.rushHourBgm;
-        setTimeout(() => rushHour.play(), 100);
+        this.playEffect(rushHour);
       }
     });
 
@@ -80,7 +80,7 @@ export class AudioService {
       const rushHour = this.getAudioElement('rush_hour_end')
       if (rushHour) {
         this.nextBgm = this.backgroundAudioElements[0];
-        rushHour.play();
+        this.playEffect(rushHour);
       }
     });
 
@@ -119,5 +119,11 @@ export class AudioService {
     }
 
     return element;
+  }
+
+  private playEffect(effect: HTMLAudioElement) {
+    window.setTimeout(() => {
+      effect.play();
+    }, 100);
   }
 }
