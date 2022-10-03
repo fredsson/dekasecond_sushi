@@ -1,6 +1,5 @@
 import { debounceTime, defer, fromEvent, merge, Observable, Subject } from "rxjs";
 import { IngredientType } from "../features/plate/plate.model";
-import { isValueDefined } from "./sanity";
 
 export enum Draggable {
   Plate,
@@ -21,11 +20,8 @@ export interface DropEvent {
 export interface DraggableItem {
   type: Draggable;
   ingredientType?: IngredientType;
-}
-
-export function eventIsTouchEvent(ev: MouseEvent | TouchEvent): ev is TouchEvent {
-  const touches = (ev as TouchEvent).changedTouches;
-  return  isValueDefined(touches);
+  clientX: number;
+  clientY: number;
 }
 
 export class DragDropService {

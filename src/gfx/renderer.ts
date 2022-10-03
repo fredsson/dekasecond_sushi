@@ -2,6 +2,7 @@ import { IngredientType } from "../features/plate/plate.model";
 import { DragDropService } from "../utils/dragdrop";
 import { EventService } from "../utils/events";
 import { CustomerQueueView } from "./customer-queue/customer-queue.view";
+import { HandView } from "./hand.view";
 import { IngredientView } from "./ingredients/ingredient.view";
 import { PlateView } from "./plate.view";
 
@@ -20,6 +21,7 @@ export class Renderer {
     this.views.push(new IngredientView(container, IngredientType.Salmon, dragDropService));
     this.views.push(new IngredientView(container, IngredientType.Avocado, dragDropService));
     this.views.push(new IngredientView(container, IngredientType.Tuna, dragDropService));
+    this.views.push(new HandView(container, dragDropService))
   }
 
   public update(dt: number) {
