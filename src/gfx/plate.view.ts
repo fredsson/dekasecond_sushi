@@ -26,7 +26,7 @@ export class PlateView implements View {
     }));
 
     this.sub.add(dragDropService.dropped$.subscribe(ev => {
-      if (isValueDefined(ev.ingredientType)) {
+      if (isValueDefined(ev.ingredientType) && this.isInside(ev.clientX, ev.clientY)) {
         eventService.emit(GameTopic.IngredientAdded);
         this.ingredients.push(ev.ingredientType);
         this.ingredientViews.push(new IngredientView(this.root, ev.ingredientType));
@@ -62,5 +62,13 @@ export class PlateView implements View {
   public destroy() {
     this.sub.unsubscribe();
     this.container.removeChild(this.root);
+  }
+
+  private isInside(clientX: number, clientY: number) {
+    const boundedRects = this.root.getBoundingClientRect();
+
+    const insideX = clientX >= boundedRects.left && clientX <= boundedRects.left + boundedRects.width;
+    const insideY = clientY >= boundedRects.top && clientY <= boundedRects.top + boundedRects.height;
+    return insideX && insideY;
   }
 }
