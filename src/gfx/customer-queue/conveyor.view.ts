@@ -15,8 +15,8 @@ interface TrayItem {
 }
 
 export class ConveyorView {
-  private readonly defaultConveyorSpeed = 80;
-  private conveyorSpeed = this.defaultConveyorSpeed;
+  private readonly defaultConveyorSpeed;
+  private conveyorSpeed : number;
   private readonly conveyorElementWidthPx = 300;
 
   private root: HTMLElement;
@@ -31,6 +31,8 @@ export class ConveyorView {
   private trayFilled = new Subject<{id: number, ingredients: IngredientType[]}>();
   public trayFilled$ = this.trayFilled.asObservable();
 
+  private containerWidth: number;
+
   constructor(private container: HTMLElement, private dragDropService: DragDropService) {
     this.root = document.createElement('div');
     this.root.id = 'conveyor-container';
@@ -40,8 +42,12 @@ export class ConveyorView {
     this.trayContainer.id = 'tray-container';
     this.root.appendChild(this.trayContainer);
 
-    const containerWidth = container.getBoundingClientRect().width;
-    const noOfConveyors = Math.ceil(containerWidth / this.conveyorElementWidthPx) + 1;
+    this.containerWidth = container.getBoundingClientRect().width;
+    const noOfConveyors = Math.ceil(this.containerWidth / this.conveyorElementWidthPx) + 1;
+
+    this.defaultConveyorSpeed = this.calculateConveyorSpeed();
+    this.conveyorSpeed = this.defaultConveyorSpeed;
+    console.log(this.defaultConveyorSpeed);
 
     this.conveyorItem = this.spawnConveyor(this.root, noOfConveyors);
   }
@@ -73,7 +79,10 @@ export class ConveyorView {
   }
 
   public startRushHour() {
-    this.conveyorSpeed = 60 + Math.round(Math.random() * 80);
+    const speed = this.defaultConveyorSpeed / 3;
+    const modifier = 1 + Math.round(Math.random() * 2);
+
+    this.conveyorSpeed = this.defaultConveyorSpeed + (speed * modifier);
   }
 
   public endRushHour() {
@@ -110,5 +119,9 @@ export class ConveyorView {
       element: elem,
       x: 0,
     };
+  }
+
+  private calculateConveyorSpeed() {
+    return 80 + (40 * (this.containerWidth / 300));
   }
 }
